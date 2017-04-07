@@ -86,13 +86,13 @@ void SugarJob::Private::startLogin()
 
     if(mSession->protocol() == nullptr) {
         SugarSoapProtocol *protocol = new SugarSoapProtocol;
-        protocol->setSession(mSession);
+        protocol->setSoap(mSession->soap());
         mSession->setProtocol(protocol);
     }
 
     QString sessionId;
     QString errorMessage;
-    const int result = mSession->protocol()->login(username, password, sessionId, errorMessage);
+    const int result = mSession->protocol()->login(username, password, mSession->host(), sessionId, errorMessage);
     if (result == KJob::NoError) {
         Private::loginDone(sessionId);
     } else {

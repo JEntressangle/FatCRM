@@ -27,7 +27,7 @@ SugarMockProtocol::SugarMockProtocol()
 
 }
 
-int SugarMockProtocol::login(const QString &user, const QString &password, QString &sessionId, QString &errorMessage)
+int SugarMockProtocol::login(const QString &user, const QString &password, const QString &host, QString &sessionId, QString &errorMessage)
 {
     if (!mServerNotFound) {
         if (user == "user" && password == "password") {
@@ -43,11 +43,6 @@ int SugarMockProtocol::login(const QString &user, const QString &password, QStri
     }
 }
 
-void SugarMockProtocol::logout()
+void SugarMockProtocol::logout(const QString &sessionId)
 {
-}
-
-void SugarMockProtocol::setSession(SugarSession *session)
-{
-    Q_UNUSED(session);
 }

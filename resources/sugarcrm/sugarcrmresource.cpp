@@ -108,7 +108,7 @@ SugarCRMResource::SugarCRMResource(const QString &id)
     mSession->createSoapInterface();
 
     SugarSoapProtocol *protocol = new SugarSoapProtocol;
-    protocol->setSession(mSession);
+    protocol->setSoap(mSession->soap());
     mSession->setProtocol(protocol);
 
     connect(mConflictHandler, SIGNAL(commitChange(Akonadi::Item)),
@@ -177,7 +177,8 @@ void SugarCRMResource::configure(WId windowId)
 void SugarCRMResource::aboutToQuit()
 {
     // just a curtesy to the server
-    mSession->protocol()->logout();
+    mSession->protocol()->logout(mSession->sessionId());
+    mSession->forgetSession();
 }
 
 void SugarCRMResource::doSetOnline(bool online)

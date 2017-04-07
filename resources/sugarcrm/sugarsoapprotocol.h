@@ -30,11 +30,13 @@ class SugarSoapProtocol : public SugarProtocolBase
 {
 public:
     SugarSoapProtocol();
-    int login(const QString &user, const QString &password, QString &sessionId, QString &errorMessage) override;
-    void logout() override;
-    inline void setSession(SugarSession *session) override { mSession = session; }
+    int login(const QString &user, const QString &password, const QString &host, QString &sessionId, QString &errorMessage) override;
+    void logout(const QString &sessionId) override;
+    //inline void setSession(SugarSession *session) override { mSession = session; }
+    inline void setSoap(KDSoapGenerated::Sugarsoap *soap) { mSoap = soap; }
 private:
-    SugarSession *mSession;
+    //SugarSession *mSession;
+    KDSoapGenerated::Sugarsoap *mSoap;
 };
 
 #endif // SUGARSOAPPROTOCOL_H

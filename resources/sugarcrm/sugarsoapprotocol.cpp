@@ -29,9 +29,9 @@ SugarSoapProtocol::SugarSoapProtocol()
 {
 }
 
-int SugarSoapProtocol::login(const QString &user, const QString &password, QString &sessionId, QString &errorMessage)
+int SugarSoapProtocol::login(const QString &user, const QString &password, const QString &host, QString &sessionId, QString &errorMessage)
 {
-    Q_ASSERT(mSession->soap() != nullptr);
+    Q_ASSERT(mSoap != nullptr);
 
     const QByteArray passwordHash = password.toUtf8();
 
@@ -40,13 +40,13 @@ int SugarSoapProtocol::login(const QString &user, const QString &password, QStri
     userAuth.setPassword(QString::fromAscii(passwordHash));
     userAuth.setVersion(QLatin1String(".01"));
 
-    KDSoapGenerated::TNS__Set_entry_result entry_result = mSession->soap()->login(userAuth, QLatin1String("FatCRM"));
+    KDSoapGenerated::TNS__Set_entry_result entry_result = mSoap->login(userAuth, QLatin1String("FatCRM"));
     if (entry_result.error().number() == "0") {
         sessionId = entry_result.id();
         return KJob::NoError;
     } else {
-        errorMessage = i18nc("@info:status", "Login for user %1 on %2 failed: %3", user, mSession->host(), mSession->soap()->lastError());
-        int faultcode = mSession->soap()->lastErrorCode();
+        errorMessage = i18nc("@info:status", "Login for user %1 on %2 failed: %3", user, host, mSoap->lastError());
+        int faultcode = mSoap->lastErrorCode();
         if (faultcode == QNetworkReply::UnknownNetworkError ||
            faultcode == QNetworkReply::HostNotFoundError) {
             return SugarJob::CouldNotConnectError;
@@ -56,17 +56,16 @@ int SugarSoapProtocol::login(const QString &user, const QString &password, QStri
     }
 }
 
-void SugarSoapProtocol::logout()
+void SugarSoapProtocol::logout(const QString &sessionId)
 {
-    if (mSession->sessionId().isEmpty() && mSession->soap() != nullptr) {
-        KDSoapGenerated::TNS__Error_value errorValue = mSession->soap()->logout(mSession->sessionId());
+    if (sessionId.isEmpty() && mSoap != nullptr) {
+        KDSoapGenerated::TNS__Error_value errorValue = mSoap->logout(sessionId);
         if (errorValue.number() != "0") {
             kDebug() << "logout returned error" << errorValue.number() << errorValue.name() << errorValue.description();
         }
-        if (!mSession->soap()->lastError().isEmpty()) {
-            kDebug() << "logout had fault" << mSession->soap()->lastError();
+        if (!mSoap->lastError().isEmpty()) {
+            kDebug() << "logout had fault" << mSoap->lastError();
         }
     }
-    mSession->forgetSession();
 }
 

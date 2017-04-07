@@ -48,7 +48,7 @@ private Q_SLOTS:
         SugarMockProtocol protocol;
         //WHEN
         QString sessionId, errorMessage;
-        int error = protocol.login(username, password, sessionId, errorMessage);
+        int error = protocol.login(username, password, "test", sessionId, errorMessage);
         //THEN
         QCOMPARE(error, correctError);
         if (error == KJob::NoError) {
@@ -63,7 +63,7 @@ private Q_SLOTS:
         protocol.setServerNotFound(true);
         //WHEN
         QString sessionId, errorMessage;
-        int error = protocol.login("user", "password", sessionId, errorMessage);
+        int error = protocol.login("user", "password", "test", sessionId, errorMessage);
         //THEN
         QCOMPARE(error, static_cast<int>(SugarJob::Errors::CouldNotConnectError));
     }

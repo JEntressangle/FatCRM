@@ -29,9 +29,8 @@ class SugarProtocolBase
 {
 public:
     virtual ~SugarProtocolBase();
-    virtual int login(const QString &user, const QString &password, QString &sessionId, QString &errorMessage) = 0;
-    virtual void logout() = 0;
-    virtual void setSession(SugarSession *session) = 0;
+    virtual int login(const QString &user, const QString &password, const QString &host, QString &sessionId, QString &errorMessage) = 0;
+    virtual void logout(const QString &SessionId) = 0;
 };
 
 
